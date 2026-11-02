@@ -37,7 +37,7 @@ deploy/deploy.sh
 
 builds the image for linux/amd64, imports it into the node's containerd over SSH (`k3s ctr images import`), applies the manifests with that image, waits for the rollout and checks https://wheelhouse.chrisjowen.net. `KUBECONFIG` (default `~/.kube/hostinger-k3s.yaml`) and `DEPLOY_SSH` (default `root@72.62.255.106`) override where it goes.
 
-The Build workflow builds and checks the site, and builds and smoke-tests the image, on every pull request.
+The Build workflow builds and checks the site, and builds and smoke-tests the image, on every pull request and every push to `main`.
 
 ## License
 
