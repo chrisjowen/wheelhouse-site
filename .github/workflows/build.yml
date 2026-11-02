@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build the site and check it
+        run: npm run check
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the nginx image
+        run: docker build -f deploy/Dockerfile -t wheelhouse-site:ci .
+      - name: Serve it and check it answers
+        run: |
+          docker run -d --rm --name site -p 8080:8080 --read-only --tmpfs /tmp wheelhouse-site:ci
+          for i in $(seq 1 20); do curl -fsS -o /dev/null http://127.0.0.1:8080/healthz && break; sleep 1; done
+          curl -fsS http://127.0.0.1:8080/ | grep -q '<title>Wheelhouse'
+          curl -fsS -o /dev/null -w '%{http_code}\n' -H 'Range: bytes=0-99' "http://127.0.0.1:8080$(curl -fsS http://127.0.0.1:8080/ | grep -o '/assets/tour\.[a-f0-9]*\.mp4' | head -1)" | grep -q 206
+          docker stop site

@@ -1,0 +1,23 @@
+{
+  "name": "wheelhouse-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Source for https://wheelhouse.chrisjowen.net, the Wheelhouse product site",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/serve.mjs",
+    "check": "node scripts/build.mjs && node scripts/check.mjs",
+    "screenshots": "node scripts/fetch-screenshots.mjs"
+  },
+  "devDependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "sharp": "^0.35.5"
+  }
+}
