@@ -34,5 +34,6 @@ for i in $(seq 1 30); do
 	[ "$i" = 30 ] && { echo "https://$HOST/ is not answering over a valid certificate" >&2; exit 1; }
 	sleep 10
 done
-curl -fsS "https://$HOST/" | grep -q '<title>Wheelhouse' || { echo "https://$HOST/ does not serve the site" >&2; exit 1; }
+page="$(curl -fsS "https://$HOST/")"
+[[ "$page" == *"<title>Wheelhouse"* ]] || { echo "https://$HOST/ does not serve the site" >&2; exit 1; }
 echo "✓ https://$HOST/ serves $image"
