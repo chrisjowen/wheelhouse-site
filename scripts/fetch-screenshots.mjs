@@ -1,5 +1,6 @@
 // Refreshes assets/ from the source repositories: every README screenshot the page uses, from each
 // repository's default branch, and the Wheelhouse README's banner. Run it, look at the diff, commit.
+// The guide's stills (assets/screenshots/guide/) are recorded, not fetched, so it leaves them alone.
 // Usage: node scripts/fetch-screenshots.mjs
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -16,7 +17,7 @@ async function fetchTo(url, file) {
 	console.log(`${file}  ←  ${url}`);
 }
 
-for (const s of allShots()) {
+for (const s of allShots().filter((s) => !s.local)) {
 	await fetchTo(`https://raw.githubusercontent.com/chrisjowen/${s.repo}/HEAD/${s.path}`, `assets/screenshots/${s.repo}/${s.path}`);
 }
 await fetchTo(BANNER.url, BANNER.file);

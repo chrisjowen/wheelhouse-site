@@ -42,7 +42,7 @@ function tour(url) {
 	<div class="wrap">
 		<div class="head">
 			<h2>Take the tour</h2>
-			<p>Under two minutes on the chat, decisions, the Harbour, a project, a task, PR review and plugins. Pick a chapter to jump to it. In Wheelhouse, Help in the header brings the tour back.</p>
+			<p>Under two minutes, in the Crew OS dark look, on the chat, decisions, the Harbour, a project, a task, PR review, Shared review and plugins. Pick a chapter to jump to it.</p>
 		</div>
 		<div class="tour">
 			<div class="player">
@@ -139,7 +139,7 @@ function releases() {
 		(r, i) => `<div class="rel${i === 0 ? ' latest' : ''}">
 				<h3>${r.version} <time datetime="${r.date}">${day(r.date)}</time></h3>
 				<ul>${r.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>
-				<a href="${SITE.repo}/releases/tag/v${r.version}">Release notes</a>
+				${r.since ? `<a href="${SITE.repo}/compare/v${r.since}...v${r.version}">What changed</a>` : `<a href="${SITE.repo}/releases/tag/v${r.version}">Release notes</a>`}
 			</div>`
 	).join('\n\t\t\t');
 }
@@ -249,7 +249,7 @@ ${features(pic)}
 			</div></div>
 			<div class="station"><div class="node">
 				<h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="7" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 20a5 5 0 0 1 10 0M12 20a5 5 0 0 1 10 0"/></svg>The crew</h3>
-				<p>Workers in their own git worktrees build, check and open pull requests, with live previews of the running app.</p>
+				<p>Workers in their own git worktrees build, check and open pull requests, with live previews of the running app. Second mates Firstmate runs, here or on another host, show their work beside your own crew’s.</p>
 				<div class="where">worktrees, checks, PRs on GitHub</div>
 			</div></div>
 		</div>
