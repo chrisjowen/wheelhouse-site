@@ -1,7 +1,10 @@
 // Everything the page says, in one place. Screenshots are each repository's own README images
-// (fetched by `npm run screenshots` into assets/screenshots/<repo>/<path>), with the README's alt text.
+// (fetched by `npm run screenshots` into assets/screenshots/<repo>/<path>), with the README's alt text,
+// and stills of Wheelhouse itself in dark mode, recorded on the demo crew with the guide's stills pass
+// (assets/screenshots/guide/, which `npm run screenshots` leaves alone).
 
 const shot = (repo, path, alt) => ({ repo, path, alt });
+const still = (name, alt) => ({ repo: 'guide', path: `${name}.png`, alt, local: true });
 
 export const SITE = {
 	url: 'https://wheelhouse.chrisjowen.net',
@@ -20,22 +23,22 @@ export const BANNER = {
 	alt: 'Wheelhouse, your bridge to Firstmate and the whole crew: a retro illustration of a captain and Firstmate at a ship’s wheel beside a brass-framed screen showing the Firstmate chat, the Harbour and a task’s passage from Queued to Landed'
 };
 
-// The recorded tour (scripts/guide/ in the Wheelhouse repo) and its chapter marks.
+// The recorded tour (npm run guide, the Wheelhouse guide recorder, in dark mode) and its chapter marks.
 export const TOUR = {
 	video: 'assets/video/tour.mp4',
 	poster: 'assets/video/tour-poster.jpg',
 	width: 1440,
 	height: 900,
 	chapters: [
-		['Home', 4.71, 'Talk to Firstmate on the right. On deck, on the left, shows what each of your crew is doing.'],
-		['Chat', 12.68, 'Firstmate’s replies carry live previews of the work, straight from the worker’s running app.'],
-		['Decisions', 21.26, 'Decisions arrive as cards. Add a note, pick an answer, and Firstmate passes it on.'],
-		['Harbour', 34.65, 'The Harbour: every project at a glance, with what needs you and what is under way.'],
-		['Project', 45.33, 'Each project has its own page: what waits on you, what is under way, and what landed.'],
-		['Task', 50.64, 'A task page follows each stage, with the worker’s screenshots and a live preview to click around.'],
-		['PR review', 55.99, 'Review opens the pull request in a plugin’s tab: a walkthrough, a quality pass, then the key changes stop by stop.'],
-		['Plugins', 77.91, 'Plugins add tabs, pages and cards. Turn them on, and choose their projects, in Settings.'],
-		['Help', 90.73, 'This tour is always one click away, under Help in the header.']
+		['Home', 4.4, 'Talk to Firstmate on the right. On deck, beside it, keeps each piece of work to one line, under its gauges.'],
+		['Chat', 13, 'Firstmate’s replies carry live previews of the work, straight from the worker’s running app.'],
+		['Decisions', 20.7, 'Decisions arrive in the chat as forms. Answer, add a note, and Firstmate passes it on.'],
+		['Harbour', 37.6, 'The Harbour: every project at a glance, and a calm chart of what is moving across the fleet.'],
+		['Project', 46.5, 'Each project has its own page: what waits on you, what is under way, and what landed.'],
+		['Task', 52.1, 'A task page starts with what the worker was asked, then one timeline of everything since.'],
+		['PR review', 59.4, 'Review opens the pull request in a plugin’s tab, a chat that walks you through each change with its verdict.'],
+		['Shared review', 87.0, 'Shared review puts a prototype or live app behind a link for others to comment on, then sends what you pick to Firstmate.'],
+		['Plugins', 95.7, 'Plugins add tabs, pages and cards. Turn them on, and choose their projects, in Settings.']
 	]
 };
 
@@ -43,20 +46,20 @@ export const CLIPS = [
 	{
 		video: 'assets/video/clip-chat.mp4',
 		poster: 'assets/video/clip-chat-poster.jpg',
-		width: 772,
-		height: 844,
+		width: 724,
+		height: 838,
 		title: 'Answer a decision in the chat.',
-		text: 'Under a live preview card, pick between two onboarding designs, add a note, approve, and the card folds to your answer.',
-		label: 'Answering a decision in the Firstmate chat: under a live preview card, a choice between two onboarding designs gets a note and Approve, and the card folds to the answer'
+		text: 'Under a live preview card, write the answer to which onboarding design ships, add a note, Decide, and the card folds to your answer.',
+		label: 'Answering a decision in the Firstmate chat, in dark mode: under a live preview card, the onboarding question gets a written answer and a note, then Decide, and the card folds to Answered'
 	},
 	{
 		video: 'assets/video/clip-review.mp4',
 		poster: 'assets/video/clip-review-poster.jpg',
-		width: 852,
-		height: 844,
-		title: 'Review a pull request in stages.',
-		text: 'Review PR on a task page opens it in the PR review plugin: a walkthrough, a quality pass, then the key changes stop by stop.',
-		label: 'Review PR on a task page opens the pull request in the PR review plugin’s tab: the walkthrough, the quality pass and the first stop, with the reviewer’s notes above the lines they discuss'
+		width: 1184,
+		height: 838,
+		title: 'Review a pull request in a chat.',
+		text: 'Review PR on a task page opens it in the PR review plugin: the overview, then each change with its verdict and key lines, and the quality pass’s suggestion.',
+		label: 'Review PR on a task page opens the pull request in the PR review plugin’s tab: the reviewer’s overview in the chat, Start the review, the first two changes with their verdicts and code, then a quality pass card with its suggestion'
 	}
 ];
 
@@ -66,41 +69,43 @@ export const FEATURES = [
 	{
 		group: 'Talk to the crew',
 		items: [
-			{ id: 'chat', name: 'Chat with Firstmate', img: wh('home', 'Wheelhouse: the main sections in the menu down the left; On deck beside it with the work under way; and the conversation with Firstmate on the right, with open decisions as cards in the chat'), text: 'Talk to Firstmate like a teammate. Chat, answer with buttons, mention tasks with #, run commands with /, or just dictate. On deck, beside it, shows what each of your crew is doing.' },
-			{ id: 'previews', name: 'Preview cards', img: wh('chat-preview', 'The Firstmate chat: a reply that a pull request is ready, with its live preview as a card underneath, showing the app and links to the pull request and a full-size view'), text: 'When a reply is about a task with a running app, its live preview shows as a card underneath: the page itself, the pull request and its checks, and a full-size view.' },
-			{ id: 'decision-cards', name: 'Decision cards', img: wh('chat-decision', 'Decisions in the Firstmate chat: a review question and a choice between two designs, each a card with Approve, Fix, Skip and Discuss'), text: 'Every open decision shows as a card in the chat, answered in place. When a question lists options, the card shows them as choices with the recommended one picked.' },
-			{ id: 'decisions', name: 'Decisions', img: wh('inbox', 'Decisions: every open question as a card, with Approve, Fix, Skip and Ask me later, and keyboard shortcuts'), text: 'Every open question in one stack, answered in one tap: Approve, Fix, Skip or Ask me later, with keyboard shortcuts.' },
+			{ id: 'chat', name: 'Chat with Firstmate', img: still('home', 'Wheelhouse in dark mode: the bridge down the left; On deck beside it, with this week’s allowance and the checks as gauges above the work under way, one line per task; and the conversation with Firstmate on the right, a decision waiting as a form'), text: 'Talk to Firstmate like a teammate. Chat, answer with buttons, mention tasks with #, run commands with /, or just dictate. Messages are tagged by project or topic, so you can read one thread at a time, and a thumbs-up answers a reply in one click. On deck, beside it, keeps each task to one line, grouped by crew.' },
+			{ id: 'previews', name: 'Preview cards', img: still('chat-preview', 'The Firstmate chat: a reply that a pull request is ready, with its live preview as a card underneath, showing the app’s share dialog, and links to the pull request, Review, Full size and a new tab'), text: 'When a reply is about a task with a running app, its live preview shows as a card underneath: the page itself, the pull request, Review and a full-size view.' },
+			{ id: 'decision-cards', name: 'Decisions in the chat', img: still('chat-decision', 'A decision in the Firstmate chat: the card asking which onboarding design should ship, with its evidence, a written answer and Decide, Add a note and Discuss, and Firstmate’s own question below with its options'), text: 'Every open decision shows as a form in the chat, answered in place: one tap, options to pick with the recommended one marked, or a written answer, with a note if you like. Firstmate can change the form as you talk it through.' },
+			{ id: 'decisions', name: 'Decisions', img: still('inbox', 'Decisions: Needs you, with a merge call carrying Firstmate’s recommendation, Chat about this and Agree, and a call on two onboarding designs; Handled by Firstmate folded below'), text: 'Only what Firstmate escalated to you, with its recommendation. Agree in one tap, or Chat about this to talk it through; what Firstmate settled itself waits, folded, under Handled by Firstmate.' },
 			{ id: 'bell', name: 'The ship’s bell', img: wh('bell', 'The ship’s bell: a question waiting and a pull request gone green, each with a one-click answer'), text: 'Rings for green pull requests, questions, stuck workers and landed merges, each with a one-click answer.' }
 		]
 	},
 	{
 		group: 'See the work',
 		items: [
-			{ id: 'harbour', name: 'Harbour', img: wh('harbour', 'Harbour: a card per project, the one that needs you first, each with what waits on you, the work under way and its step, and what landed this week'), text: 'Every project at a glance: a card each, the one that needs you first, what waits on you, the work under way and its step, and what landed this week.' },
-			{ id: 'project', name: 'Project pages', img: wh('project', 'A project page: lumen’s banner with what needs you, a row of tabs for its work, issues, links, secrets and passage, and the tasks waiting on your move'), text: 'Each project has its own page: a banner with what needs you, and tabs for its work, issues, links, secrets, passage and any plugin that adds one.' },
-			{ id: 'radar', name: 'Radar', img: wh('radar', 'Fleet radar: every task as a dot moving from Queued through Building, Testing and Pull request to Landed'), text: 'Watch the whole fleet flow from Queued through Building, Testing and Pull request to Landed, live.' },
-			{ id: 'task', name: 'Task pages', img: wh('task', 'A task page: the automated checks step by step, with two failing tests and the start of their output'), text: 'Every check, file, pull request and log for a task in one place, step by step, with the failing tests’ output where it matters and a live console for its worker.' },
-			{ id: 'preview', name: 'Live preview', img: wh('preview', 'A live preview of the app under review, with feedback sent to the worker and Firstmate’s reply beside it'), text: 'Click around the real app under review and send feedback straight to the worker, with Firstmate’s reply beside it.' },
+			{ id: 'harbour', name: 'Harbour', img: still('harbour', 'Harbour in dark mode: seven projects, two things need you; the fleet chart, a line per project from Queued to Landed with each task as a dot; then a card per project with what waits on you and what is under way'), text: 'Every project at a glance, under a calm chart of what is moving across the fleet: a card each, the one that needs you first, what waits on you, the work under way and what landed this week. Second mates’ tasks show beside your own crew’s.' },
+			{ id: 'project', name: 'Project pages', img: still('project', 'A project page: lumen’s banner with what needs you, tabs for its work, issues, PR review, links and passage, and Your move with the two tasks waiting on you and their screenshots'), text: 'Each project has its own page: a banner with what needs you, and tabs for its work, issues, links, passage and any plugin that adds one.' },
+			{ id: 'radar', name: 'Radar', img: still('radar', 'Fleet radar: every task as a dot in five lanes, Queued, Building, Testing, Pull request and Landed, coloured busy, idle, waiting on you, stuck, with Firstmate or landed'), text: 'Watch the whole fleet flow from Queued through Building, Testing and Pull request to Landed, live.' },
+			{ id: 'task', name: 'Task pages', img: still('task', 'A task page: what needs you and the review evidence on the left, and the timeline starting with the worker’s instructions, the captain’s intent and Firstmate’s spec, with the stages to jump to on the right'), text: 'A task page starts with what the worker was asked, the captain’s intent and Firstmate’s spec, then one timeline of everything since: the conversation, updates, checks and the pull request, filtered as you like.' },
+			{ id: 'changes', name: 'Changes and diffs', img: still('task-changes', 'A task’s Changes tab: every file the task changed against main, with lines added and removed, uncommitted and untracked files included'), text: 'Every file a task changed against its base, uncommitted and untracked work included, with each diff a click away. Second mates’ tasks get the same.' },
+			{ id: 'preview', name: 'Live preview', img: still('preview', 'A task’s Live preview: the demo app’s share dialog running inside Wheelhouse, with Open in new tab, Full screen and the preview helper below'), text: 'Click around the real app under review. A helper that sees only that preview talks it through with you and builds a feedback list; Send to Firstmate passes it on.' },
 			{ id: 'conversation', name: 'The conversation', img: wh('conversation', 'The conversation between a worker and Firstmate: an instruction the worker has read, and the automated review’s question with Firstmate’s call on it'), text: 'Every question a worker asked and how it was answered, including the automated review’s questions and Firstmate’s call on each.' }
 		]
 	},
 	{
 		group: 'Review and ship',
 		items: [
-			{ id: 'review', name: 'PR review', img: shot('pr-review-wheelhouse', 'docs/images/stop.png', 'Stop 1 of the review: a reviewer note pinned above lines 61 to 64, a change request pinned under them, and the chat answering a question about the stop’s ranking query'), text: 'With the PR review plugin, Review on any pull request opens a guided review: a walkthrough, a quality pass, then the key changes stop by stop, with the reviewer’s notes pinned above the lines they discuss.' },
-			{ id: 'docket', name: 'Docket casebook', img: shot('docket', 'docs/assets/docket-open.png', 'docket open on the acme-platform example: the Browse graph with the Research Assistant agent selected, and its confidence, sources and three pieces of evidence in the Inspector'), text: 'With docket’s plugin, a project’s Docket tab is its casebook: browse the team-memory graph, table and history, ask questions, search and sync. Shown here is docket open’s own page; the Docket tab draws the same UI inside Wheelhouse.' },
+			{ id: 'review', name: 'PR review', img: shot('pr-review-wheelhouse', 'docs/images/chat-card.png', 'The chat review of a real pull request (chrisjowen/docket#48) in the PR review tab: the navigator on the left with each change marked by its verdict, and in the chat a Performance risk change filed as Serious, with its code'), text: 'With the PR review plugin, Review on any pull request opens a review in a chat: an overview, then each change in reading order with its verdict, from Looks good to Possible security issue, the key lines and a suggestion. Accept, disagree or comment on each, then Finish review drafts your verdict to post, copy or send to Firstmate.' },
+			{ id: 'shared-review', name: 'Shared review', img: still('shared-review-cards', 'The Reviews page in dark mode: two open reviews of the demo Lumen app as cards with live thumbnails, one a local preview and one live on the review server, each with its task, comments, reviewers, link and passcode'), text: 'With the bundled Shared review plugin, share a prototype or a live app behind a link that carries its passcode. People pin comments to the spot they mean, attach files and voice notes, and when you close it you choose which threads go to Firstmate, as they are or tidied into points.' },
+			{ id: 'docket', name: 'Docket casebook', img: shot('docket', 'docs/assets/wheelhouse-docket-tab.png', 'Wheelhouse’s Docket project tab: the casebook’s Browse graph inside Wheelhouse, with a decision selected and its evidence and confidence in the inspector'), text: 'With docket’s plugin, a project’s Docket tab is its casebook inside Wheelhouse: browse the team-memory graph, table and history, ask questions, search and sync, and Firstmate can search it too.' },
 			{ id: 'passage', name: 'Passage editor', img: wh('passage-editor', 'The passage editor testing a new Deployed locally step on a landed task: where the task would be, and the local deploy’s output'), text: 'Add your own steps to a task’s passage, like a local deploy after merge, and test them on a landed task before you keep them.' },
-			{ id: 'vault', name: 'Vault', img: shot('wheelhouse', 'docs/screenshots/plugins/vault-page.png', 'The Vault page: each secret by name with the projects that may use it, an Add a secret button, and the recent use of the vault by task, command and result'), text: 'Give the crew secrets by name with wh-vault. Values stay in the macOS Keychain; the Vault page shows names, grants and use, never a value.' }
+			{ id: 'vault', name: 'Vault', img: shot('wheelhouse', 'docs/screenshots/plugins/vault-page.png', 'The Vault page: each secret by name with the projects that may use it, an Add a secret button, and the recent use of the vault by task, command and result'), text: 'Give the crew secrets by name with wh-vault. Values stay in the macOS Keychain; the Vault page shows names, grants and use, never a value. Add one from the key button under the chat, including one Firstmate asks for.' }
 		]
 	},
 	{
 		group: 'Keep watch',
 		items: [
-			{ id: 'decided', name: 'Decided for you', img: wh('decisions', 'Decided for you: review questions Firstmate answered on your behalf, grouped by day, with each call and its reason'), text: 'Every call Firstmate made on your behalf, grouped by day, with each call and its reason.' },
-			{ id: 'time', name: 'Where time went', img: wh('time', 'Where time went: each task’s time split into building, review, CI and waiting on you'), text: 'Spot the bottleneck: each task’s time split into building, review, CI and waiting on you.' },
-			{ id: 'headroom', name: 'Headroom', img: wh('headroom', 'Headroom: Claude allowance left this session and this week, and each task’s share of recent use'), text: 'Never run out of allowance: Claude headroom left this session and this week, and each task’s share of recent use.' },
+			{ id: 'decided', name: 'Decided for you', img: still('decisions', 'Decided for you in the Logbook: review questions Firstmate answered on your behalf, grouped by day, each with its call, the task and whether it landed'), text: 'Every call Firstmate made on your behalf, grouped by day, with each call and its reason.' },
+			{ id: 'time', name: 'Where time went', img: still('time', 'Where time went: two days across eighteen tasks, split into building, automated review and fixes, Firstmate deciding, CI checks and waiting on you, then each project’s tasks'), text: 'Spot the bottleneck: each task’s time split into building, review, CI and waiting on you.' },
+			{ id: 'headroom', name: 'Headroom', img: still('headroom', 'Headroom: Claude allowance left this session, this week and this week on Opus, and each task’s share of recent use'), text: 'Never run out of allowance: Claude headroom left this session and this week, and each task’s share of recent use.' },
 			{ id: 'improve', name: 'Improvements', img: wh('improvements', 'Improvements: a harness review is due, proposals waiting for your call and the size of the harness'), text: 'With the improve plugin, your harness gets better, only with your approval: reviews due, proposals waiting for your call, and the size of the harness.' },
-			{ id: 'night', name: 'Day or night', img: wh('home-dark', 'Wheelhouse in dark mode: the same home page on deep navy'), text: 'A calm logbook look in light, deep navy after dark.' }
+			{ id: 'night', name: 'Day or night', img: wh('home', 'Wheelhouse in the Crew OS light look: the bridge down the left with the main sections and the second mates; On deck beside it with its gauges and the work under way; and the conversation with Firstmate on the right'), text: 'The Crew OS look: warm paper by day, near-black navy after dark, gold for what needs you. The screenshots here are dark; this one is the day look.' }
 		]
 	}
 ];
@@ -109,15 +114,12 @@ export const FEATURES = [
 export const PLUGINS = [
 	{
 		id: 'pr-review', name: 'PR review', repo: 'pr-review-wheelhouse', kind: 'install',
-		what: 'Review a pull request in stages: a walkthrough, a quality pass, the key changes stop by stop, then a skim pile. A chat sits beside the code at every stage.',
-		adds: 'A PR review tab on each project. Claude by default, or a local model through Ollama. Nothing is posted or sent until you click.',
+		what: 'A reviewer reads the whole pull request, then walks you through it in a chat, one change at a time: the key changes stop by stop, a quality pass with every concern as a checklist, then the skim pile. Each change has its verdict, its key lines and a suggestion where it needs one.',
+		adds: 'A PR review tab on each project, with a navigator of every change and file. Claude through your own Claude Code sign-in by default, or a local model through Ollama. Nothing is posted or sent until you click.',
 		shots: [
-			shot('pr-review-wheelhouse', 'docs/images/walkthrough.png', 'The walkthrough of a real pull request (chrisjowen/docket#48) in the PR review tab: the stages down the left, the reviewer’s summary in the middle and the review mate’s chat on the right'),
-			shot('pr-review-wheelhouse', 'docs/images/quality-pass.png', 'The quality pass: a note marked “Worth changing” on a long function, with its diff lines, the suggestion, and Keep, Dismiss and Discuss buttons'),
-			shot('pr-review-wheelhouse', 'docs/images/stop.png', 'Stop 1 of the review: a reviewer note pinned above lines 61 to 64, a change request pinned under them, and the chat answering a question about the stop’s ranking query'),
-			shot('pr-review-wheelhouse', 'docs/images/alternatives.png', 'Other ways to do it: three alternative approaches with their gains and costs, labelled Worse, Consider and Recommend'),
-			shot('pr-review-wheelhouse', 'docs/images/skim-pile.png', 'The skim pile: the remaining files, each with a one-line summary, its size and a risk dot, and generated files hidden'),
-			shot('pr-review-wheelhouse', 'docs/images/finish-review.png', 'Finish the review: the suggested verdict Request changes, the editable summary, the two inline comments, and the message for Firstmate'),
+			shot('pr-review-wheelhouse', 'docs/images/chat-card.png', 'The chat review of a real pull request (chrisjowen/docket#48) in the PR review tab: the navigator on the left with each change marked by its verdict, and in the chat a Performance risk change filed as Serious, with its code'),
+			shot('pr-review-wheelhouse', 'docs/images/chat-file.png', 'A whole file open in the drawer beside the chat, at the lines the change is about'),
+			shot('pr-review-wheelhouse', 'docs/images/chat-finish.png', 'Finishing the review: the decisions, the suggested verdict Request changes, the editable draft and the buttons to post, copy or send it'),
 			shot('pr-review-wheelhouse', 'docs/images/prompts.png', 'The review prompts panel: the overall review prompt and the walkthrough, quality pass, key change stops and skim pile prompts, each editable')
 		]
 	},
@@ -134,9 +136,10 @@ export const PLUGINS = [
 	{
 		id: 'docket', name: 'Docket', repo: 'docket', kind: 'install',
 		what: 'A project’s team-memory casebook inside Wheelhouse: Browse (graph, table, history), Ask, Adapters, the inspector, chat, quick search and sync.',
-		adds: 'A Docket tab, on for every project whose clone has .docket.yaml, plus docket’s MCP app in the chat. The screenshot is docket open’s own page; the tab draws the same UI.',
+		adds: 'A Docket tab, on for every project whose clone has .docket.yaml, plus docket’s MCP app in the chat.',
 		shots: [
-			shot('docket', 'docs/assets/docket-open.png', 'docket open on the acme-platform example: the Browse graph with the Research Assistant agent selected, and its confidence, sources and three pieces of evidence in the Inspector')
+			shot('docket', 'docs/assets/wheelhouse-docket-tab.png', 'Wheelhouse’s Docket project tab: the casebook’s Browse graph inside Wheelhouse, with a decision selected and its evidence and confidence in the inspector'),
+			shot('docket', 'docs/assets/docket-browse-graph.png', 'docket open on docket’s own casebook: the Browse graph of its libraries, systems, decisions and constraints, each type with its own icon and colour, beside the index of exhibit types and relationships')
 		]
 	},
 	{
@@ -198,6 +201,18 @@ export const PLUGINS = [
 		]
 	},
 	{
+		id: 'shared-review', name: 'Shared review', kind: 'builtin', on: 'Off until you turn it on',
+		what: 'Put a prototype or a worker’s live app behind sign-in for several people to comment on the spot they mean, with pinned and whole-review comments, attachments and voice notes. Share links carry the passcode.',
+		adds: 'A Reviews page and a Shared review section on each task. Closing a review takes the link down and sends the threads you pick to Firstmate, as they are or tidied into points you edit first. Reviews go live on a review server you deploy.',
+		shots: [
+			still('shared-review-cards', 'The Reviews page in dark mode: two open reviews of the demo Lumen app as cards with live thumbnails, one a local preview and one live on the review server, each with its task, comments, reviewers, link and passcode'),
+			still('shared-review-task', 'A task’s Shared review tab: the live review of the share dialog with its thumbnail, link and passcode, and Ana’s and Ben’s comments pinned to spots on the page'),
+			shot('wheelhouse', 'docs/screenshots/plugins/shared-review-reviewer.png', 'A reviewer’s view: the prototype with numbered pins where people commented, and the comments beside it'),
+			shot('wheelhouse', 'docs/screenshots/plugins/shared-review-comment.png', 'Commenting on a live app under review: in comment mode a click on the app opens a comment on that spot instead of reaching it'),
+			shot('wheelhouse', 'docs/screenshots/plugins/shared-review-firstmate.png', 'The Firstmate chat: the closed review’s comments as one Shared review feedback card about the task, sent to Firstmate')
+		]
+	},
+	{
 		id: 'share-previews', name: 'Share previews', repo: 'share-previews-wheelhouse', kind: 'build',
 		what: 'Share a live preview as a password-protected HTTPS link through your own k3s cluster.',
 		adds: 'Being built now. The repository holds only its README so far.',
@@ -243,8 +258,11 @@ export const SLOTS = [
 	['nav.page', 'a page in the menu']
 ];
 
-// From the GitHub releases (gh release list / view -R chrisjowen/wheelhouse). Newest first.
+// From the GitHub releases (gh release list / view -R chrisjowen/wheelhouse), and for releases with
+// a tag but no release notes, the pull requests merged since the one before. Newest first.
 export const RELEASES = [
+	{ version: '0.4.0', date: '2026-11-10', since: '0.3.0', notes: ['The Crew OS look, in light and dark', 'Chat about this keeps its decision in view'] },
+	{ version: '0.3.0', date: '2026-11-10', since: '0.2.1', notes: ['The bundled Shared review plugin: live and static review links, pinned comments, attachments, voice notes and a tidied summary for Firstmate', 'A task page that starts with the worker’s brief, then one timeline; On deck as one line per task, grouped by crew', 'Second mates beside local work, decision forms and threads in the chat, a thumbs-up for Firstmate, the vault popup and the fleet chart'] },
 	{ version: '0.2.1', date: '2026-11-01', notes: ['Review on a pull request opens it in a plugin’s review tab', 'The built-in PR review gives way to the PR review plugin'] },
 	{ version: '0.2.0', date: '2026-11-01', notes: ['Live previews and decisions as cards in the chat', 'Harbour with a page per project', 'Discord gateway, the vault, plugins installed from GitHub, MCP apps'] },
 	{ version: '0.1.1', date: '2026-10-27', notes: ['A README led by getting started and a scannable feature list'] },

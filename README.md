@@ -22,10 +22,11 @@ The build (`scripts/build.mjs`) turns every screenshot into WebP at 720 and 1440
 | --- | --- |
 | Words, features, plugins, releases | `src/content.mjs` |
 | Screenshots | each repository's README images, in `assets/screenshots/<repo>/<path>` |
+| Wheelhouse stills | dark-mode screenshots of the demo crew from the guide's `stills` pass (`npm run guide -- stills` in the Wheelhouse repo), in `assets/screenshots/guide/` |
 | Banner | the Wheelhouse README's banner, `assets/banner.png` |
-| Tour and clips | recorded with `npm run guide` in the Wheelhouse repo, `assets/video/` |
+| Tour and clips | recorded in dark mode with `npm run guide`, the Wheelhouse guide recorder, on the same demo crew, `assets/video/` |
 
-To refresh the screenshots and banner from GitHub, run `npm run screenshots`, look at the diff and commit it. A new screenshot or plugin goes in `src/content.mjs` first.
+To refresh the screenshots and banner from GitHub, run `npm run screenshots`, look at the diff and commit it; it leaves the stills alone. A new screenshot or plugin goes in `src/content.mjs` first.
 
 ## Deploy
 
