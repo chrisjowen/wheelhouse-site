@@ -1,5 +1,5 @@
 # The site's image: nginx serving the output of `npm run build`.
-# Built by deploy/deploy.sh from the repository root: docker build -f deploy/Dockerfile .
+# Built by deploy/scripts/deploy.sh from the repository root: docker build -f deploy/Dockerfile .
 FROM node:22-alpine AS build
 WORKDIR /site
 COPY package.json package-lock.json ./

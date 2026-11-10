@@ -1,5 +1,8 @@
 # wheelhouse.chrisjowen.net on the k3s cluster: nginx serving the static site, behind Traefik with a
-# Let's Encrypt certificate from cert-manager. deploy/deploy.sh applies this and sets the image tag.
+# Let's Encrypt certificate from cert-manager. deploy/scripts/deploy.sh applies this through the
+# node's wheelhouse-site-deploy gate, which sets the image tag.
+# Two replicas, a rolling update that never drops below two ready pods, and a PodDisruptionBudget,
+# so neither a deploy nor a node drain takes the site down.
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -13,8 +16,14 @@ metadata:
   labels:
     app: wheelhouse-site
 spec:
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 3
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       app: wheelhouse-site
@@ -24,6 +33,15 @@ spec:
         app: wheelhouse-site
     spec:
       automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      # Spread the pods over nodes when there is more than one; on one node both still run.
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: wheelhouse-site
       securityContext:
         runAsNonRoot: true
         runAsUser: 101
@@ -32,7 +50,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: web
-          # Imported straight into k3s's containerd by deploy.sh; never pulled from a registry.
+          # Imported straight into k3s's containerd by the deploy gate; never pulled from a registry.
           image: wheelhouse-site:latest
           imagePullPolicy: Never
           ports:
@@ -42,12 +60,20 @@ spec:
             httpGet:
               path: /healthz
               port: http
-            periodSeconds: 10
+            periodSeconds: 5
+            failureThreshold: 2
           livenessProbe:
             httpGet:
               path: /healthz
               port: http
-            periodSeconds: 30
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            failureThreshold: 3
+          # Let Traefik drop the pod from its endpoints before nginx stops taking connections.
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "5"]
           resources:
             requests:
               cpu: 10m
@@ -65,6 +91,17 @@ spec:
       volumes:
         - name: tmp
           emptyDir: {}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web
+  namespace: wheelhouse-site
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: wheelhouse-site
 ---
 apiVersion: v1
 kind: Service
