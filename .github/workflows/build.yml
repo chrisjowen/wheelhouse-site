@@ -34,3 +34,58 @@ jobs:
           curl -fsS http://127.0.0.1:8080/ | grep -q '<title>Wheelhouse'
           curl -fsS -o /dev/null -w '%{http_code}\n' -H 'Range: bytes=0-99' "http://127.0.0.1:8080$(curl -fsS http://127.0.0.1:8080/ | grep -o '/assets/tour\.[a-f0-9]*\.mp4' | head -1)" | grep -q 206
           docker stop site
+
+  # Deploys main to the Hostinger k3s node once Build passes, in the pattern When You're Older
+  # uses. Nothing deploys until the repository variable DEPLOY_ENABLED is "true" (see the README's
+  # Deploy section). Builds the image here, streams it to the node over SSH (there is no registry)
+  # and applies the manifest on the node through deploy/node/wheelhouse-site-deploy, so the
+  # Kubernetes API stays closed to the internet. A commit that is no longer the tip of main is
+  # skipped.
+  # Needs NODE_SSH_KEY, a secret of the production environment (the deploy key pinned to
+  # wheelhouse-site-deploy, see deploy/scripts/install-deploy-gate.sh), and the repository variable
+  # DEPLOY_HOST_KNOWN_HOSTS (the node's known_hosts line, which pins its host key).
+  deploy:
+    needs: [site, image]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: https://wheelhouse.chrisjowen.net
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the commit is still the tip of main
+        id: tip
+        run: |
+          main=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [[ $main == "$GITHUB_SHA" ]]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::not deploying $GITHUB_SHA: main is at $main now, which deploys on its own"
+            echo "current=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Configure node access
+        if: steps.tip.outputs.current == 'true'
+        env:
+          NODE_SSH_KEY: ${{ secrets.NODE_SSH_KEY }}
+          DEPLOY_HOST_KNOWN_HOSTS: ${{ vars.DEPLOY_HOST_KNOWN_HOSTS }}
+        run: |
+          if [[ -z $NODE_SSH_KEY ]]; then
+            echo "::error::the production environment secret NODE_SSH_KEY is not set"
+            exit 1
+          fi
+          if [[ -z $DEPLOY_HOST_KNOWN_HOSTS ]]; then
+            echo "::error::the repository variable DEPLOY_HOST_KNOWN_HOSTS is not set"
+            exit 1
+          fi
+          install -d -m 0700 ~/.ssh
+          install -m 0600 /dev/null ~/.ssh/id_ed25519
+          printf '%s\n' "$NODE_SSH_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$DEPLOY_HOST_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          printf '%s\n' 'Host *' '  BatchMode yes' '  StrictHostKeyChecking yes' \
+            '  IdentitiesOnly yes' '  IdentityFile ~/.ssh/id_ed25519' > ~/.ssh/config
+      - name: Deploy
+        if: steps.tip.outputs.current == 'true'
+        run: deploy/scripts/deploy.sh

@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# The node side of a deploy, in the pattern When You're Older, orgcontrol and docket-cloud use.
+# deploy/scripts/install-deploy-gate.sh installs it as /usr/local/bin/wheelhouse-site-deploy, and
+# the CI deploy key is pinned to it (restrict,command="/usr/local/bin/wheelhouse-site-deploy" in
+# root's authorized_keys), so that key can run these verbs and nothing else:
+#
+#   wheelhouse-site-deploy version        print this script's sha256
+#   wheelhouse-site-deploy import         stdin: a `docker save` tarball, imported into k3s
+#   wheelhouse-site-deploy apply <tag>    stdin: deploy/k8s/site.yaml; applied with that image
+#                                         tag, then waits for the rollout
+#
+# kubectl runs here against the node's own kubeconfig, so the Kubernetes API stays closed to
+# the internet. It can only touch the wheelhouse-site namespace.
+set -euo pipefail
+
+if [[ $# -eq 0 && -n ${SSH_ORIGINAL_COMMAND:-} ]]; then
+  read -ra requested <<<"$SSH_ORIGINAL_COMMAND"
+  set -- "${requested[@]}"
+fi
+[[ ${1:-} != wheelhouse-site-deploy ]] || shift
+
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+namespace=wheelhouse-site
+image=wheelhouse-site
+
+die() {
+  echo "wheelhouse-site-deploy: $*" >&2
+  exit 1
+}
+
+case ${1:-} in
+  version)
+    [[ $# -eq 1 ]] || die "usage: wheelhouse-site-deploy version"
+    sha256sum "${BASH_SOURCE[0]}" | cut -d' ' -f1
+    ;;
+
+  import)
+    [[ $# -eq 1 ]] || die "usage: wheelhouse-site-deploy import < image.tar"
+    exec k3s ctr images import -
+    ;;
+
+  apply)
+    [[ $# -eq 2 ]] || die "usage: wheelhouse-site-deploy apply <tag> < site.yaml"
+    tag=$2
+    [[ $tag =~ ^[0-9a-f]{12}(-dirty)?$ ]] || die "not a deploy tag: $tag"
+    exec 9>/run/wheelhouse-site-deploy.lock
+    flock -n 9 || die "another deploy is running on this node"
+    k3s ctr images ls -q | grep -qx "docker.io/library/$image:$tag" || die "image $image:$tag is not on the node; import it first"
+    manifest=$(cat)
+    # Only this site's namespace: refuse anything that names another one, or any cluster-wide kind
+    # other than its own Namespace.
+    if grep -E '^\s+namespace:' <<<"$manifest" | grep -vqE "namespace: $namespace\$"; then
+      die "the manifest names a namespace other than $namespace"
+    fi
+    if grep -E '^kind:' <<<"$manifest" | grep -qE 'kind: (ClusterRole|ClusterRoleBinding|CustomResourceDefinition|PersistentVolume|StorageClass|MutatingWebhookConfiguration|ValidatingWebhookConfiguration)$'; then
+      die "the manifest has a cluster-wide resource"
+    fi
+    sed "s|image: $image:latest|image: $image:$tag|" <<<"$manifest" | kubectl apply -f -
+    kubectl -n "$namespace" rollout status deploy/web --timeout=180s
+    # Keep the newest few images, drop older ones.
+    k3s ctr images ls -q | grep "^docker.io/library/$image:" | grep -vx "docker.io/library/$image:$tag" |
+      head -n -3 | xargs -r k3s ctr images rm >/dev/null || true
+    echo "wheelhouse-site-deploy: $image $tag is live"
+    ;;
+
+  *)
+    die "unknown command (allowed: version, import, apply)"
+    ;;
+esac

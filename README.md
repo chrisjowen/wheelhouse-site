@@ -30,15 +30,26 @@ To refresh the screenshots and banner from GitHub, run `npm run screenshots`, lo
 
 ## Deploy
 
-The site runs on the k3s cluster as namespace `wheelhouse-site`: nginx (`deploy/Dockerfile`, `deploy/nginx.conf`) behind Traefik, with a Let's Encrypt certificate from cert-manager's `letsencrypt` ClusterIssuer (`deploy/k8s/site.yaml`).
+The site runs on the k3s cluster as namespace `wheelhouse-site`: nginx (`deploy/Dockerfile`, `deploy/nginx.conf`) behind Traefik, with a Let's Encrypt certificate from cert-manager's `letsencrypt` ClusterIssuer (`deploy/k8s/site.yaml`). Two replicas run with a PodDisruptionBudget (at least one always available), and a rolling update starts a new pod and waits for it to be ready before stopping an old one (`maxUnavailable: 0`), so a deploy never takes the site down.
 
-```bash
-deploy/deploy.sh
-```
+The Build workflow builds and checks the site, and builds and smoke-tests the image, on every pull request and every push to `main`. On a push to `main`, once both pass, its `deploy` job runs `deploy/scripts/deploy.sh`, which builds the image for linux/amd64, streams it to the node over SSH, applies the manifest through the node's `wheelhouse-site-deploy` gate (`deploy/node/wheelhouse-site-deploy`), waits for the rollout and checks https://wheelhouse.chrisjowen.net. The CI key can only run that gate's `version`, `import` and `apply` verbs, and `apply` refuses anything outside the `wheelhouse-site` namespace, so the Kubernetes API stays closed to the internet. A commit that is no longer the tip of `main` is skipped. The same script deploys from a laptop with root SSH to the node (`NODE_SSH`, default `root@72.62.255.106`).
 
-builds the image for linux/amd64, imports it into the node's containerd over SSH (`k3s ctr images import`), applies the manifests with that image, waits for the rollout and checks https://wheelhouse.chrisjowen.net. `KUBECONFIG` (default `~/.kube/hostinger-k3s.yaml`) and `DEPLOY_SSH` (default `root@72.62.255.106`) override where it goes.
+### Turning on deploys from CI
 
-The Build workflow builds and checks the site, and builds and smoke-tests the image, on every pull request and every push to `main`.
+Nothing deploys from CI until these are set on the GitHub repository:
+
+| Name | Kind | What it is |
+| --- | --- | --- |
+| `NODE_SSH_KEY` | secret of the `production` environment | the private half of the deploy key |
+| `DEPLOY_HOST_KNOWN_HOSTS` | repository variable | the node's known_hosts line (`ssh-keyscan -t ed25519 72.62.255.106`), which pins its host key |
+| `DEPLOY_ENABLED` | repository variable | `true` to deploy on every push to `main` |
+
+1. On a trusted machine, `ssh-keygen -t ed25519 -N '' -C wheelhouse-site-deploy -f wheelhouse-site-deploy-key`. Commit `wheelhouse-site-deploy-key.pub` as `deploy/node/deploy-key.pub`, put the private half in the `production` environment (allow only `main`, no required reviewers, so merges deploy on their own) as `NODE_SSH_KEY`, then delete the local private key.
+2. Store the `ssh-keyscan` line as `DEPLOY_HOST_KNOWN_HOSTS`.
+3. Run `deploy/scripts/install-deploy-gate.sh` (needs root SSH to the node). It installs the gate as `/usr/local/bin/wheelhouse-site-deploy` and pins the deploy key to it with `restrict,command=...`. Rerun it whenever the gate or the key changes; `deploy.sh` refuses to deploy while the node's gate differs from the repository's.
+4. Set `DEPLOY_ENABLED` to `true`.
+
+To roll back, run `deploy/scripts/deploy.sh` from an earlier commit (the node keeps the last few images), or `kubectl -n wheelhouse-site rollout undo deploy/web`.
 
 ## License
 
