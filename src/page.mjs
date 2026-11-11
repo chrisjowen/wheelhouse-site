@@ -1,5 +1,6 @@
 // Renders the whole page to static HTML from src/content.mjs. The build hands in `url` (a source
 // file's published, content-hashed address) and `pic` (a screenshot's optimised WebP sizes).
+import { TUTORIAL } from './tutorial.mjs';
 import { CLIPS, FEATURES, PLUGINS, RELEASES, SITE, SLOTS, TOUR, BANNER } from './content.mjs';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -28,7 +29,34 @@ function shotImg(pic, s, { lazy = true, sizes, gallery } = {}) {
 	return `<a href="${p.full}" data-zoom${g}><img src="${p.src}" srcset="${p.srcset}" sizes="${sizes}" width="${p.width}" height="${p.height}" alt="${esc(s.alt)}"${lazy ? ' loading="lazy"' : ''} decoding="async"></a>`;
 }
 
-function tour(url) {
+function tutorialPlayer(url, id = 'video') {
+	return `<div class="player"><video id="${id}" data-tutorial controls playsinline preload="none" poster="${url(TOUR.poster)}" width="${TOUR.width}" height="${TOUR.height}" aria-label="Build a habit tracker with Wheelhouse: narrated tutorial">
+		<source src="${url(TOUR.video)}" type="video/mp4">
+		<track kind="captions" src="${url(TOUR.captions)}" srclang="en" label="English">
+		<p><a href="${url(TOUR.video)}">Download the Wheelhouse tutorial</a>.</p>
+	</video></div>`;
+}
+
+function tutorialCredits() {
+	return `<p class="note tutorial-credit">Recorded with a fictional demo crew. Narrated audio and burned-in captions. Music: <a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037">“Carefree” by Kevin MacLeod</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), edited and mixed under narration.</p>`;
+}
+
+function tutorialPage(url) {
+	return `<section class="band tutorial-intro" id="top"><div class="wrap">
+		<p class="eyebrow">The Wheelhouse walkthrough · ${fmt(TOUR.duration)}</p>
+		<h1>One idea. A whole crew. Something shipped.</h1>
+		<p class="lede">Follow Daymark, a small habit tracker, from the first message to Firstmate through building, decisions, a live preview, the report and the merge. Then explore the rest of the bridge.</p>
+	</div></section>
+	${tour(url, true)}
+	<section class="band" id="transcript"><div class="wrap transcript">
+		<details><summary>Read the full transcript</summary>
+		${TUTORIAL.map((scene) => `<article><h3>${fmt(scene.at)} · ${esc(scene.title.replace(/^\d+ \/ /, ''))}</h3><p>${esc(scene.text)}</p></article>`).join('')}
+		</details>
+		<p><a class="btn primary" href="/#start">Get started with Wheelhouse ${ICON.arrow}</a></p>
+	</div></section>`;
+}
+
+function tour(url, standalone = false) {
 	const chapters = TOUR.chapters
 		.map(([n, at, d], i) => `<li${i === 0 ? ' class="on"' : ''}><button type="button" data-at="${at}"><span class="t">${fmt(at)}</span><span class="n">${esc(n)}</span><span class="d">${esc(d)}</span></button></li>`)
 		.join('');
@@ -40,21 +68,17 @@ function tour(url) {
 	).join('\n\t\t\t');
 	return `<section class="band alt" id="tour">
 	<div class="wrap">
-		<div class="head">
+		${standalone ? '' : `<div class="head">
 			<h2>Take the tour</h2>
-			<p>Under two minutes, in the Crew OS dark look, on the chat, decisions, the Harbour, a project, a task, PR review, Shared review and plugins. Pick a chapter to jump to it.</p>
-		</div>
+			<p>From an idea to a shipped habit tracker in two and a half minutes. Chat, watch the build, answer a decision, try the preview and review the result. Pick a chapter to jump in.</p>
+		</div>`}
 		<div class="tour">
-			<div class="player">
-				<video id="video" controls playsinline preload="metadata" poster="${url(TOUR.poster)}" width="${TOUR.width}" height="${TOUR.height}" aria-label="The Wheelhouse tour">
-					<source src="${url(TOUR.video)}" type="video/mp4">
-				</video>
-			</div>
+			${tutorialPlayer(url)}
 			<ol class="chapters" id="chapters" aria-label="Chapters">${chapters}</ol>
 		</div>
-		<div class="clips">
-			${clips}
-		</div>
+		${tutorialCredits()}
+		<p class="tutorial-links"><a href="${standalone ? '#transcript' : '/tour/'}">${standalone ? 'Read the transcript' : 'Open the full tutorial and transcript'}</a> · <a href="${url(TOUR.video)}" download="wheelhouse-tutorial.mp4">Download video</a> · <a href="${url(TOUR.captions)}" download="wheelhouse-tutorial.vtt">Download captions</a></p>
+		${standalone ? '' : `<div class="clips">${clips}</div>`}
 	</div>
 </section>`;
 }
@@ -144,7 +168,10 @@ function releases() {
 	).join('\n\t\t\t');
 }
 
-export function render({ url, pic, banner, og, css, js, themeScript, csp }) {
+export function render({ url, pic, banner, og, css, js, themeScript, csp, tourPage = false }) {
+	const title = tourPage ? 'Build a habit tracker with Wheelhouse — video tutorial' : SITE.title;
+	const description = tourPage ? 'A narrated Wheelhouse walkthrough: from an idea to a shipped habit tracker, then plugins, Vault, Remotes, phone mode, setup and updates. Includes chapters and transcript.' : SITE.description;
+	const pageUrl = `${SITE.url}${tourPage ? '/tour/' : '/'}`;
 	const latest = RELEASES[0].version;
 	return `<!doctype html>
 <html lang="en" class="no-js">
@@ -152,23 +179,23 @@ export function render({ url, pic, banner, og, css, js, themeScript, csp }) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="${csp}">
-<title>${esc(SITE.title)}</title>
-<meta name="description" content="${esc(SITE.description)}">
-<link rel="canonical" href="${SITE.url}/">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(description)}">
+<link rel="canonical" href="${pageUrl}">
 <meta name="theme-color" content="#f6f2e9" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#16191f" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Wheelhouse">
-<meta property="og:url" content="${SITE.url}/">
-<meta property="og:title" content="${esc(SITE.title)}">
-<meta property="og:description" content="${esc(SITE.description)}">
+<meta property="og:url" content="${pageUrl}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
 <meta property="og:image" content="${SITE.url}${og.path}">
 <meta property="og:image:width" content="${og.width}">
 <meta property="og:image:height" content="${og.height}">
 <meta property="og:image:alt" content="${esc(BANNER.alt)}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(SITE.title)}">
-<meta name="twitter:description" content="${esc(SITE.description)}">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${SITE.url}${og.path}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="${url('font:inter')}" as="font" type="font/woff2" crossorigin>
@@ -182,14 +209,14 @@ export function render({ url, pic, banner, og, css, js, themeScript, csp }) {
 
 <header class="top">
 	<div class="wrap">
-		<a class="brand" href="#top" aria-label="Wheelhouse home">${ICON.wheel}<span>Wheelhouse</span></a>
+		<a class="brand" href="/" aria-label="Wheelhouse home">${ICON.wheel}<span>Wheelhouse</span></a>
 		<nav class="nav" aria-label="Sections">
-			<a href="#tour">Tour</a>
-			<a href="#features">Features</a>
-			<a href="#how">With Firstmate</a>
-			<a href="#plugins">Plugins</a>
-			<a href="#start">Get started</a>
-			<a href="#releases">Releases</a>
+			<a href="${tourPage ? '/' : ''}#tour">Tour</a>
+			<a href="${tourPage ? '/' : ''}#features">Features</a>
+			<a href="${tourPage ? '/' : ''}#how">With Firstmate</a>
+			<a href="${tourPage ? '/' : ''}#plugins">Plugins</a>
+			<a href="${tourPage ? '/' : ''}#start">Get started</a>
+			<a href="${tourPage ? '/' : ''}#releases">Releases</a>
 		</nav>
 		<div class="top-actions">
 			<button class="icon-btn" id="theme" type="button" aria-label="Theme: follows your system" title="Theme: follows your system">${ICON.moon}</button>
@@ -199,7 +226,7 @@ export function render({ url, pic, banner, og, css, js, themeScript, csp }) {
 </header>
 
 <main id="main">
-<section class="hero" id="top">
+${tourPage ? tutorialPage(url) : `<section class="hero" id="top">
 	<div class="wrap">
 		<div>
 			<h1>Run a crew of AI coding agents without living in their terminals.</h1>
@@ -215,9 +242,9 @@ export function render({ url, pic, banner, og, css, js, themeScript, csp }) {
 				<li>${ICON.arrow}v${latest}, MIT licensed</li>
 			</ul>
 		</div>
-		<figure>
-			<img class="rope" src="${banner.src}" srcset="${banner.srcset}" sizes="(max-width: 1020px) 100vw, 760px" width="${banner.width}" height="${banner.height}" alt="${esc(BANNER.alt)}" fetchpriority="high">
-			<figcaption>Talk to Firstmate. See the whole crew. Review previews, make decisions, keep work moving.</figcaption>
+		<figure class="hero-tutorial">
+			${tutorialPlayer(url, 'hero-video')}
+			<figcaption>From “build me a habit tracker” to landed. ${fmt(TOUR.duration)}, with narration and captions. <a href="/tour/">Chapters and transcript ${ICON.arrow}</a></figcaption>
 		</figure>
 	</div>
 </section>
@@ -337,7 +364,7 @@ ${plugins(pic)}
 			${releases()}
 		</div>
 	</div>
-</section>
+</section>`}
 </main>
 
 <footer>

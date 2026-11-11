@@ -1,0 +1,257 @@
+WEBVTT
+
+1
+00:00:01.200 --> 00:00:02.625
+Want to build something useful?
+
+2
+00:00:02.907 --> 00:00:05.101
+Let's make a habit tracker, with a crew
+
+3
+00:00:05.101 --> 00:00:07.841
+of AI coding agents and one calm place
+
+4
+00:00:07.841 --> 00:00:08.511
+to steer.
+
+5
+00:00:08.735 --> 00:00:09.916
+This is Wheelhouse.
+
+6
+00:00:10.024 --> 00:00:11.812
+Open the chat and tell Firstmate what you
+
+7
+00:00:11.812 --> 00:00:14.795
+want: daily habits, a weekly streak, and a
+
+8
+00:00:14.795 --> 00:00:16.220
+clean mobile layout.
+
+9
+00:00:16.502 --> 00:00:19.451
+Add a file, dictate, or mention a task
+
+10
+00:00:19.451 --> 00:00:20.899
+to keep the context together.
+
+11
+00:00:21.181 --> 00:00:22.641
+The task appears on deck.
+
+12
+00:00:23.224 --> 00:00:25.209
+A worker picks it up, and its own
+
+13
+00:00:25.209 --> 00:00:27.587
+page brings the brief, live progress,
+
+14
+00:00:27.671 --> 00:00:30.780
+conversation, and checks into one timeline.
+
+15
+00:00:31.363 --> 00:00:34.228
+Open Changes to inspect the actual diff.
+
+16
+00:00:34.927 --> 00:00:37.389
+Here's a decision: should streaks reset at
+
+17
+00:00:37.389 --> 00:00:40.056
+midnight or follow the user's time zone?
+
+18
+00:00:40.756 --> 00:00:42.877
+Firstmate recommends local time.
+
+19
+00:00:43.159 --> 00:00:45.736
+Pick it, tap Decide, and the crew carries
+
+20
+00:00:45.736 --> 00:00:46.186
+on.
+
+21
+00:00:46.770 --> 00:00:48.949
+Your judgment, right where you need it.
+
+22
+00:00:49.648 --> 00:00:51.773
+Now the habit tracker is running inside
+
+23
+00:00:51.773 --> 00:00:52.618
+Wheelhouse.
+
+24
+00:00:53.317 --> 00:00:54.220
+Tick a habit.
+
+25
+00:00:54.803 --> 00:00:55.903
+Try the layout.
+
+26
+00:00:56.011 --> 00:00:58.736
+Use the preview helper to gather feedback, then
+
+27
+00:00:58.739 --> 00:01:00.048
+send it to Firstmate.
+
+28
+00:01:00.747 --> 00:01:02.953
+Share for review brings other people into the
+
+29
+00:01:02.953 --> 00:01:03.844
+conversation.
+
+30
+00:01:04.253 --> 00:01:06.549
+Open the worker's report in the reading view.
+
+31
+00:01:06.773 --> 00:01:09.988
+The plan, tradeoffs, and test results are easy
+
+32
+00:01:09.988 --> 00:01:12.705
+to scan, with room to read the details
+
+33
+00:01:12.705 --> 00:01:14.316
+before you give the go ahead.
+
+34
+00:01:14.807 --> 00:01:16.743
+The pull request is ready.
+
+35
+00:01:17.326 --> 00:01:20.020
+The review plugin walks through the changes, with
+
+36
+00:01:20.020 --> 00:01:22.153
+code and a verdict at each stop.
+
+37
+00:01:22.643 --> 00:01:25.720
+Approve the merge through Firstmate, and the task
+
+38
+00:01:25.720 --> 00:01:26.437
+lands.
+
+39
+00:01:27.020 --> 00:01:29.296
+Back on deck, the next piece is already
+
+40
+00:01:29.296 --> 00:01:29.908
+moving.
+
+41
+00:01:30.608 --> 00:01:32.881
+Zoom out to Harbour for every project.
+
+42
+00:01:33.220 --> 00:01:35.945
+Radar shows work flowing through its stages.
+
+43
+00:01:36.169 --> 00:01:39.733
+Decisions, the bell, the logbook, time, and
+
+44
+00:01:39.733 --> 00:01:42.342
+headroom keep attention on what matters.
+
+45
+00:01:43.042 --> 00:01:45.027
+Second mates bring more crews onto the same
+
+46
+00:01:45.027 --> 00:01:45.605
+bridge.
+
+47
+00:01:45.886 --> 00:01:49.308
+Plugins add pages, project tabs, and chat cards.
+
+48
+00:01:49.799 --> 00:01:51.363
+Enable the ones you need.
+
+49
+00:01:51.587 --> 00:01:54.640
+Connect project links, GitHub issues, shared
+
+50
+00:01:54.640 --> 00:01:57.276
+reviews, and team knowledge without leaving the
+
+51
+00:01:57.276 --> 00:01:57.830
+work.
+
+52
+00:01:58.414 --> 00:02:00.988
+The Vault gives projects access to secrets by
+
+53
+00:02:00.991 --> 00:02:01.534
+name.
+
+54
+00:02:02.024 --> 00:02:04.741
+Values stay in the keychain; the page shows
+
+55
+00:02:04.741 --> 00:02:06.073
+grants and use.
+
+56
+00:02:06.773 --> 00:02:09.141
+Remotes and Wheelhouse Cloud connect you to your
+
+57
+00:02:09.141 --> 00:02:10.973
+own machine from another browser.
+
+58
+00:02:11.556 --> 00:02:13.994
+On your phone, the same bridge fits in
+
+59
+00:02:13.994 --> 00:02:14.734
+your hand.
+
+60
+00:02:15.225 --> 00:02:17.857
+The setup wizard guides your first launch.
+
+61
+00:02:18.557 --> 00:02:21.433
+Settings keeps plugins and updates close by.
+
+62
+00:02:21.843 --> 00:02:23.186
+Start with an idea.
+
+63
+00:02:23.409 --> 00:02:24.846
+Keep your crew moving.
+
+64
+00:02:25.430 --> 00:02:28.318
+Build something worth shipping, with Wheelhouse.

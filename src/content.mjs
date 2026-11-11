@@ -1,3 +1,5 @@
+import { TUTORIAL } from './tutorial.mjs';
+
 // Everything the page says, in one place. Screenshots are each repository's own README images
 // (fetched by `npm run screenshots` into assets/screenshots/<repo>/<path>), with the README's alt text,
 // and stills of Wheelhouse itself in dark mode, recorded on the demo crew with the guide's stills pass
@@ -23,23 +25,15 @@ export const BANNER = {
 	alt: 'Wheelhouse, your bridge to Firstmate and the whole crew: a retro illustration of a captain and Firstmate at a ship’s wheel beside a brass-framed screen showing the Firstmate chat, the Harbour and a task’s passage from Queued to Landed'
 };
 
-// The recorded tour (npm run guide, the Wheelhouse guide recorder, in dark mode) and its chapter marks.
+// Story-driven tutorial recorded against an isolated, seeded demo crew.
 export const TOUR = {
 	video: 'assets/video/tour.mp4',
 	poster: 'assets/video/tour-poster.jpg',
-	width: 1440,
-	height: 900,
-	chapters: [
-		['Home', 4.4, 'Talk to Firstmate on the right. On deck, beside it, keeps each piece of work to one line, under its gauges.'],
-		['Chat', 13, 'Firstmate’s replies carry live previews of the work, straight from the worker’s running app.'],
-		['Decisions', 20.7, 'Decisions arrive in the chat as forms. Answer, add a note, and Firstmate passes it on.'],
-		['Harbour', 37.6, 'The Harbour: every project at a glance, and a calm chart of what is moving across the fleet.'],
-		['Project', 46.5, 'Each project has its own page: what waits on you, what is under way, and what landed.'],
-		['Task', 52.1, 'A task page starts with what the worker was asked, then one timeline of everything since.'],
-		['PR review', 59.4, 'Review opens the pull request in a plugin’s tab, a chat that walks you through each change with its verdict.'],
-		['Shared review', 87.0, 'Shared review puts a prototype or live app behind a link for others to comment on, then sends what you pick to Firstmate.'],
-		['Plugins', 95.7, 'Plugins add tabs, pages and cards. Turn them on, and choose their projects, in Settings.']
-	]
+	captions: 'assets/video/tour.vtt',
+	width: 1920,
+	height: 1080,
+	duration: 153,
+	chapters: TUTORIAL.map((s) => [s.title.replace(/^\d+ \/ /, ''), s.at, s.text])
 };
 
 export const CLIPS = [

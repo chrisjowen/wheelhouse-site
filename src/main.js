@@ -97,6 +97,7 @@ document.addEventListener('click', async (e) => {
 /* Tour chapters: seek and play; highlight the chapter playing */
 (() => {
 	const v = $('#video'), list = $('#chapters');
+	if (!v || !list) return;
 	const lis = [...list.children];
 	const ats = lis.map((li) => +li.querySelector('button').dataset.at);
 	const mark = () => {
@@ -119,6 +120,7 @@ document.addEventListener('click', async (e) => {
 /* Feature index: one panel at a time */
 (() => {
 	const idx = $('#findex'), panels = $$('#fpanels .fview');
+	if (!idx) return;
 	const ids = panels.map((p) => p.dataset.id);
 	let cur = 0;
 	const show = (i, focus = false) => {
@@ -157,6 +159,7 @@ document.addEventListener('click', async (e) => {
 /* Plugin filters */
 (() => {
 	const filters = $('#filters'), list = $('#plist');
+	if (!filters || !list) return;
 	filters.addEventListener('click', (e) => {
 		const b = e.target.closest('.chip');
 		if (!b) return;
@@ -196,3 +199,10 @@ document.addEventListener('click', async (e) => {
 	);
 	$$('main section[id]').forEach((s) => io.observe(s));
 })();
+
+/* Only one narrated player should speak at a time. */
+$$('video[data-tutorial]').forEach((video) => {
+	video.addEventListener('play', () => {
+		$$('video[data-tutorial]').forEach((other) => { if (other !== video) other.pause(); });
+	});
+});

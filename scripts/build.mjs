@@ -67,6 +67,7 @@ async function main() {
 	// Videos and their posters
 	for (const v of [TOUR, ...CLIPS]) {
 		urls.set(v.video, await emit(slug(path.basename(v.video)), 'mp4', await readFile(path.join(ROOT, v.video))));
+		if (v.captions) urls.set(v.captions, await emit(slug(path.basename(v.captions)), 'vtt', await readFile(path.join(ROOT, v.captions))));
 		urls.set(v.poster, await emit(slug(path.basename(v.poster)), 'webp', await sharp(path.join(ROOT, v.poster)).webp({ quality: 78 }).toBuffer()));
 	}
 
@@ -116,13 +117,15 @@ async function main() {
 
 	const html = render({ url, pic, banner, og, css, js, themeScript: THEME_SCRIPT, csp });
 	await writeFile(path.join(DIST, 'index.html'), html);
+	await mkdir(path.join(DIST, 'tour'), { recursive: true });
+	await writeFile(path.join(DIST, 'tour/index.html'), render({ url, pic, banner, og, css, js, themeScript: THEME_SCRIPT, csp, tourPage: true }));
 
 	// Small static files
 	await copyFile(path.join(ROOT, 'src/favicon.svg'), path.join(DIST, 'favicon.svg'));
 	await writeFile(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.url}/sitemap.xml\n`);
 	await writeFile(
 		path.join(DIST, 'sitemap.xml'),
-		`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE.url}/</loc></url>\n</urlset>\n`
+		`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE.url}/</loc></url>\n  <url><loc>${SITE.url}/tour/</loc></url>\n</urlset>\n`
 	);
 
 	console.log(`built dist/ (${(html.length / 1024).toFixed(0)} KB of HTML, ${pics.size} screenshots)`);
