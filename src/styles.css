@@ -294,7 +294,6 @@ dialog.lb .lb-count { font: 500 13px var(--font-mono); color: #ada899; margin-ri
 }
 
 /* The tutorial keeps the same brass, paper and navy palette as the rest of the site. */
-.hero-tutorial .player { transform: rotate(-1deg); }
 .hero-tutorial video { display: block; }
 .hero-tutorial figcaption a { display: inline-flex; align-items: center; gap: 5px; }
 .hero-tutorial figcaption svg { width: 14px; height: 14px; }

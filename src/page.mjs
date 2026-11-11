@@ -30,7 +30,7 @@ function shotImg(pic, s, { lazy = true, sizes, gallery } = {}) {
 }
 
 function tutorialPlayer(url, id = 'video') {
-	return `<div class="player"><video id="${id}" data-tutorial controls playsinline preload="none" poster="${url(TOUR.poster)}" width="${TOUR.width}" height="${TOUR.height}" aria-label="Build a habit tracker with Wheelhouse: narrated tutorial">
+	return `<div class="player"><video id="${id}" data-tutorial controls playsinline preload="none" poster="${url(TOUR.poster)}" width="${TOUR.width}" height="${TOUR.height}" aria-label="Build a Docket feature with Wheelhouse: narrated tutorial">
 		<source src="${url(TOUR.video)}" type="video/mp4">
 		<track kind="captions" src="${url(TOUR.captions)}" srclang="en" label="English">
 		<p><a href="${url(TOUR.video)}">Download the Wheelhouse tutorial</a>.</p>
@@ -38,14 +38,14 @@ function tutorialPlayer(url, id = 'video') {
 }
 
 function tutorialCredits() {
-	return `<p class="note tutorial-credit">Recorded with a fictional demo crew. Narrated audio and burned-in captions. Music: <a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037">“Carefree” by Kevin MacLeod</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), edited and mixed under narration.</p>`;
+	return `<p class="note tutorial-credit">Recorded with a fictional demo crew. Narrated audio and burned-in captions. Music: <a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500026">“EDM Detection Mode” by Kevin MacLeod</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), edited and mixed under narration.</p>`;
 }
 
 function tutorialPage(url) {
 	return `<section class="band tutorial-intro" id="top"><div class="wrap">
 		<p class="eyebrow">The Wheelhouse walkthrough · ${fmt(TOUR.duration)}</p>
 		<h1>One idea. A whole crew. Something shipped.</h1>
-		<p class="lede">Follow Daymark, a small habit tracker, from the first message to Firstmate through building, decisions, a live preview, the report and the merge. Then explore the rest of the bridge.</p>
+		<p class="lede">Give Docket nightly smart summaries, from the first message to Firstmate through the build, a decision, the preview and the merge. Six projects keep moving around it.</p>
 	</div></section>
 	${tour(url, true)}
 	<section class="band" id="transcript"><div class="wrap transcript">
@@ -70,7 +70,7 @@ function tour(url, standalone = false) {
 	<div class="wrap">
 		${standalone ? '' : `<div class="head">
 			<h2>Take the tour</h2>
-			<p>From an idea to a shipped habit tracker in two and a half minutes. Chat, watch the build, answer a decision, try the preview and review the result. Pick a chapter to jump in.</p>
+			<p>A new Docket feature, a six-project crew, and a clear path from idea to shipped in under two minutes. Pick a chapter to jump in.</p>
 		</div>`}
 		<div class="tour">
 			${tutorialPlayer(url)}
@@ -169,8 +169,8 @@ function releases() {
 }
 
 export function render({ url, pic, banner, og, css, js, themeScript, csp, tourPage = false }) {
-	const title = tourPage ? 'Build a habit tracker with Wheelhouse — video tutorial' : SITE.title;
-	const description = tourPage ? 'A narrated Wheelhouse walkthrough: from an idea to a shipped habit tracker, then plugins, Vault, Remotes, phone mode, setup and updates. Includes chapters and transcript.' : SITE.description;
+	const title = tourPage ? 'Build a Docket feature with Wheelhouse — video tutorial' : SITE.title;
+	const description = tourPage ? 'A fast Wheelhouse walkthrough: build nightly smart summaries for Docket while a six-project fleet keeps moving. Narration, captions, chapters and transcript.' : SITE.description;
 	const pageUrl = `${SITE.url}${tourPage ? '/tour/' : '/'}`;
 	const latest = RELEASES[0].version;
 	return `<!doctype html>
@@ -244,7 +244,7 @@ ${tourPage ? tutorialPage(url) : `<section class="hero" id="top">
 		</div>
 		<figure class="hero-tutorial">
 			${tutorialPlayer(url, 'hero-video')}
-			<figcaption>From “build me a habit tracker” to landed. ${fmt(TOUR.duration)}, with narration and captions. <a href="/tour/">Chapters and transcript ${ICON.arrow}</a></figcaption>
+			<figcaption>From “give Docket nightly summaries” to landed. ${fmt(TOUR.duration)}, with narration and captions. <a href="/tour/">Chapters and transcript ${ICON.arrow}</a></figcaption>
 		</figure>
 	</div>
 </section>

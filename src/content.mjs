@@ -32,7 +32,7 @@ export const TOUR = {
 	captions: 'assets/video/tour.vtt',
 	width: 1920,
 	height: 1080,
-	duration: 153,
+	duration: 106,
 	chapters: TUTORIAL.map((s) => [s.title.replace(/^\d+ \/ /, ''), s.at, s.text])
 };
 

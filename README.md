@@ -24,7 +24,7 @@ The build (`scripts/build.mjs`) turns every screenshot into WebP at 720 and 1440
 | Screenshots | each repository's README images, in `assets/screenshots/<repo>/<path>` |
 | Wheelhouse stills | dark-mode screenshots of the demo crew from the guide's `stills` pass (`npm run guide -- stills` in the Wheelhouse repo), in `assets/screenshots/guide/` |
 | Banner | the Wheelhouse README's banner, `assets/banner.png` |
-| Tutorial, captions and poster | narrated Daymark walkthrough captured from an isolated fake fleet; see [production record and music licence](docs/tutorial-production.md), `assets/video/tour.*` and `tour-poster.jpg` |
+| Tutorial, captions and poster | narrated Docket feature walkthrough captured from an isolated fake fleet; see [production record and music licence](docs/tutorial-production.md), `assets/video/tour.*` and `tour-poster.jpg` |
 | Short clips | earlier dark-mode guide recordings on a demo crew, `assets/video/clip-*` |
 
 To refresh the screenshots and banner from GitHub, run `npm run screenshots`, look at the diff and commit it; it leaves the stills alone. A new screenshot or plugin goes in `src/content.mjs` first.
