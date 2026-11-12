@@ -2,7 +2,7 @@
 
 Source for https://wheelhouse.chrisjowen.net, the Wheelhouse product site: the pitch, the video tour and clips, every feature, every plugin, getting started and the releases.
 
-It is one static page, rendered at build time from `src/content.mjs`, with a little JavaScript for the theme switch, chapters, feature index, plugin filters and screenshot lightbox. Without JavaScript everything still reads.
+It is a static home page and a dedicated `/tour/` tutorial page, rendered at build time from `src/content.mjs`, with a little JavaScript for the theme switch, chapters, feature index, plugin filters and screenshot lightbox. Without JavaScript everything still reads.
 
 ## Build and preview
 
@@ -24,7 +24,8 @@ The build (`scripts/build.mjs`) turns every screenshot into WebP at 720 and 1440
 | Screenshots | each repository's README images, in `assets/screenshots/<repo>/<path>` |
 | Wheelhouse stills | dark-mode screenshots of the demo crew from the guide's `stills` pass (`npm run guide -- stills` in the Wheelhouse repo), in `assets/screenshots/guide/` |
 | Banner | the Wheelhouse README's banner, `assets/banner.png` |
-| Tour and clips | recorded in dark mode with `npm run guide`, the Wheelhouse guide recorder, on the same demo crew, `assets/video/` |
+| Tutorial, captions and poster | narrated Docket feature walkthrough captured from an isolated fake fleet; see [production record and music licence](docs/tutorial-production.md), `assets/video/tour.*` and `tour-poster.jpg` |
+| Short clips | earlier dark-mode guide recordings on a demo crew, `assets/video/clip-*` |
 
 To refresh the screenshots and banner from GitHub, run `npm run screenshots`, look at the diff and commit it; it leaves the stills alone. A new screenshot or plugin goes in `src/content.mjs` first.
 
