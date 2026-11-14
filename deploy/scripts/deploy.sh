@@ -43,6 +43,9 @@ for i in $(seq 1 30); do
   [[ $i != 30 ]] || { echo "deploy: https://$host/ is not answering over a valid certificate" >&2; exit 1; }
   sleep 10
 done
-page=$(curl -fsS --max-time 10 "https://$host/")
-[[ $page == *"<title>Wheelhouse"* ]] || { echo "deploy: https://$host/ does not serve the site" >&2; exit 1; }
-echo "deploy: https://$host/ serves $image"
+# The site has moved to Fleetyard: the ingress answers every path with a 301 there.
+to=$(curl -fsS --max-time 10 -o /dev/null -w '%{http_code} %{redirect_url}' "https://$host/tour/")
+[[ $to == "301 https://fleetyard.io/tour" ]] || { echo "deploy: https://$host/tour/ does not redirect to https://fleetyard.io/tour ($to)" >&2; exit 1; }
+to=$(curl -fsS --max-time 10 -o /dev/null -w '%{http_code} %{redirect_url}' "https://$host/")
+[[ $to == "301 https://fleetyard.io/" ]] || { echo "deploy: https://$host/ does not redirect to https://fleetyard.io/ ($to)" >&2; exit 1; }
+echo "deploy: $image is live; https://$host/ redirects to https://fleetyard.io/"
