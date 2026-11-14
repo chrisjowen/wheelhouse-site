@@ -2,6 +2,8 @@
 
 Source for https://wheelhouse.chrisjowen.net, the Wheelhouse product site: the pitch, the video tour and clips, every feature, every plugin, getting started and the releases.
 
+**Moved:** the product site is now [Fleetyard](https://fleetyard.io). wheelhouse.chrisjowen.net answers every request with a 301 there (`/tour/` to https://fleetyard.io/tour, everything else to the homepage), through Traefik middlewares on the ingress in `deploy/k8s/site.yaml`; the nginx pods still run behind it.
+
 It is a static home page and a dedicated `/tour/` tutorial page, rendered at build time from `src/content.mjs`, with a little JavaScript for the theme switch, chapters, feature index, plugin filters and screenshot lightbox. Without JavaScript everything still reads.
 
 ## Build and preview
@@ -33,7 +35,7 @@ To refresh the screenshots and banner from GitHub, run `npm run screenshots`, lo
 
 The site runs on the k3s cluster as namespace `wheelhouse-site`: nginx (`deploy/Dockerfile`, `deploy/nginx.conf`) behind Traefik, with a Let's Encrypt certificate from cert-manager's `letsencrypt` ClusterIssuer (`deploy/k8s/site.yaml`). Two replicas run with a PodDisruptionBudget (at least one always available), and a rolling update starts a new pod and waits for it to be ready before stopping an old one (`maxUnavailable: 0`), so a deploy never takes the site down.
 
-The Build workflow builds and checks the site, and builds and smoke-tests the image, on every pull request and every push to `main`. On a push to `main`, once both pass, its `deploy` job runs `deploy/scripts/deploy.sh`, which builds the image for linux/amd64, streams it to the node over SSH, applies the manifest through the node's `wheelhouse-site-deploy` gate (`deploy/node/wheelhouse-site-deploy`), waits for the rollout and checks https://wheelhouse.chrisjowen.net. The CI key can only run that gate's `version`, `import` and `apply` verbs, and `apply` refuses anything outside the `wheelhouse-site` namespace, so the Kubernetes API stays closed to the internet. A commit that is no longer the tip of `main` is skipped. The same script deploys from a laptop with root SSH to the node (`NODE_SSH`, default `root@72.62.255.106`).
+The Build workflow builds and checks the site, and builds and smoke-tests the image, on every pull request and every push to `main`. On a push to `main`, once both pass, its `deploy` job runs `deploy/scripts/deploy.sh`, which builds the image for linux/amd64, streams it to the node over SSH, applies the manifest through the node's `wheelhouse-site-deploy` gate (`deploy/node/wheelhouse-site-deploy`), waits for the rollout and checks that https://wheelhouse.chrisjowen.net redirects to https://fleetyard.io. The CI key can only run that gate's `version`, `import` and `apply` verbs, and `apply` refuses anything outside the `wheelhouse-site` namespace, so the Kubernetes API stays closed to the internet. A commit that is no longer the tip of `main` is skipped. The same script deploys from a laptop with root SSH to the node (`NODE_SSH`, default `root@72.62.255.106`).
 
 ### Turning on deploys from CI
 
